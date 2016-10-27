@@ -59,25 +59,12 @@ sub __load_prove_state {
 sub __setup_testing_cluster {
     my ($self, $hosts) = @_;
 
-    my ($prove_host_num, $forkprove_host_num);
-    foreach my $host (@$hosts) {
-        if ($host->runner eq 'prove') {
-            $prove_host_num++;
-        } elsif ($host->runner eq 'forkprove') {
-            $forkprove_host_num++;
-        } else {
-            die "unknown keyword at runner [$host->{runner}]";
-        }
-    }
-
-    my $prove_test_clusters     = $self->__make_test_cluster($self->prove_tests, $prove_host_num);
-    my $forkprove_test_clusters = $self->__make_test_cluster($self->forkprove_tests, $forkprove_host_num);
-
-    foreach my $host (@$hosts) {
-        if ($host->runner eq 'prove') {
-            $host->tests(shift @$prove_test_clusters);
-        } else {
-            $host->tests(shift @$forkprove_test_clusters);
+    for my $prove (qw/prove forkprove/) {
+        my @hosts  = grep { $_->runner eq $prove ) @$hosts;
+        my $get_tests_method = "${prove}_tests";
+        my $test_clusters = $self->__make_test_cluster($self->$get_tests_method, scalar @hosts);
+        for my $i (0..$#hosts) {
+            $hosts[$i]->tests($test_clusters->[$i]);
         }
     }
 }

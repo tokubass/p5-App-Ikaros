@@ -39,6 +39,9 @@ sub new {
     my $key      = $h->{private_key} || $default->{private_key} || '';
     my $workdir  = $h->{workdir}     || $default->{workdir} || '$HOME';
     my $runner   = $h->{runner}      || $default->{runner}  || 'prove';
+    die "unknown keyword at runner [$runner]"
+        if ($runner ne 'prove' && $runner ne 'forkprove');
+
     my $coverage = $h->{coverage}    || $default->{coverage}|| 0;
     my $perlbrew = $h->{perlbrew}    || $default->{perlbrew}|| 0;
     die "please setup workdir for testing" unless $workdir;
