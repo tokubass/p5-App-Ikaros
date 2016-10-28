@@ -56,6 +56,9 @@ sub __setup_landing_points {
 sub __planning {
     my ($self) = @_;
     my $plan = $self->config->{plan};
+    $plan->{prove_tests} ||= [];
+    $plan->{forkprove_tests} ||= [];
+
     my $planner = App::Ikaros::Planner->new($self->hosts, $plan);
     $planner->planning($_, $plan) foreach @{$self->hosts};
     $self->tests([ @{$plan->{prove_tests}}, @{$plan->{forkprove_tests}} ]);
