@@ -127,7 +127,7 @@ sub __make_command {
     $host->prove(($host->runner eq 'prove') ? \@prove_commands : \@forkprove_commands);
 
     my $before_command = $self->__join_command($chdir, $args->{before_commands});
-    my $main_command   = $self->__make_main_command($chdir . '/' . $args->{chdir}, $host);
+    my $main_command   = $self->__make_main_command($chdir . '/' . ($args->{chdir} || '') , $host);
     my $after_command  = $self->__join_command($chdir, $args->{after_commands});
 
     return [
